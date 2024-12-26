@@ -67,6 +67,7 @@ execSync(
  -fno-exceptions \
  -fvisibility=hidden \
  -mexec-model=reactor \
+ -Wno-incompatible-function-pointer-types \
  -Wl,-error-limit=0 \
  -Wl,-O3 \
  -Wl,--lto-O3 \
