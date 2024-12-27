@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { copyFileSync, mkdirSync } from 'fs';
+import { copyFileSync, mkdirSync, writeFileSync } from 'fs';
 import { join, resolve } from 'path';
 
 let platform = process.env.WASM_PLATFORM ?? '';
@@ -67,7 +67,6 @@ execSync(
  -fno-exceptions \
  -fvisibility=hidden \
  -mexec-model=reactor \
- -Wno-incompatible-function-pointer-types \
  -Wl,-error-limit=0 \
  -Wl,-O3 \
  -Wl,--lto-O3 \
@@ -92,6 +91,10 @@ copyFileSync(join(WASM_SRC, 'lib', 'llhttp', 'constants.d.ts'), join(WASM_OUT, '
 copyFileSync(join(WASM_SRC, 'lib', 'llhttp', 'utils.js'), join(WASM_OUT, 'utils.js'));
 copyFileSync(join(WASM_SRC, 'lib', 'llhttp', 'utils.js.map'), join(WASM_OUT, 'utils.js.map'));
 copyFileSync(join(WASM_SRC, 'lib', 'llhttp', 'utils.d.ts'), join(WASM_OUT, 'utils.d.ts'));
+
+// Add package.json to specify CommonJS module type
+const packageJson = JSON.stringify({ type: "commonjs" }, null, 2);
+writeFileSync(join(WASM_OUT, 'package.json'), packageJson);
 
 function isErrorWithCode(error: unknown): error is Error & { code: string } {
   return typeof error === 'object' && error !== null && 'code' in error;
