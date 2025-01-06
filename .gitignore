@@ -4,3 +4,4 @@ test/tmp/
 lib/
 build/
 release/
+.DS_Store
